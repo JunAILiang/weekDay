@@ -1,0 +1,99 @@
+1. ## 项目概述 
+
+为优化产品体验、提升转化率和留存率，需要多一些数据埋点，重点关注用户付费意愿、PWA安装、用户旅程和留存分析。
+
+1. ## 埋点目标 
+
+- **付费意愿分析**：跟踪用户从访问到付费的完整路径，识别关键转化节点。
+- **PWA****安装漏斗**：监控PWA安装提示的展示、用户接受安装的比率。
+- **用户旅程分析**：映射用户从入口到关键行为的路径，识别流失点。
+- **留存分析**：衡量用户长期活跃度，分析影响留存的因素。
+- **数据漏斗构建**：建立关键转化漏斗（如注册绑定、任务完成、付费），用于迭代优化。
+
+1. ## 关键事件埋点设计 
+
+以下事件需在PWA中埋点，每个事件包括事件名称、触发条件、参数（属性）和说明。
+
+### 3.1 应用级事件 （唯一标识-设备id）
+
+| 事件名称                 | 触发条件                   | 参数                                                         | 说明                              |
+| ------------------------ | -------------------------- | ------------------------------------------------------------ | --------------------------------- |
+| app_launch               | PWA首次加载或从后台恢复    | platform（如内部浏览器/外部浏览器）、pwa_installed（布尔值）、entry_point（如直接访问、分享链接） | 跟踪应用启动，用于分析PWA使用情况 |
+| pwa_install_prompt_shown | 浏览器触发PWA安装提示时    | prompt_type（如浏览器原生、自定义）、user_action（如滚动、停留时间） | 监控安装提示曝光                  |
+| pwa_install_success      | 用户成功安装PWA            | install_method（如添加到主屏幕）、time_since_prompt（从提示到安装的时间） | 衡量PWA安装转化                   |
+| app_error                | 应用发生错误（如加载失败） | error_type、error_message、page                              | 用于稳定性监控                    |
+
+### 3.2 用户旅程事件 （唯一标识-用户id/设备id）
+
+| 事件名称           | 触发条件               | 参数                                                         | 说明                             |
+| ------------------ | ---------------------- | ------------------------------------------------------------ | -------------------------------- |
+| device_login       | 用户打开链接           | start_time（时间）、device_sys（操作系统）、ad_id（广告id）、country、language | 拿到用户初始数据                 |
+| user_bind          | 用户完成绑定           | bind_method（如谷歌、apple、邮箱）                           | 跟踪新用户转化，结合付费意愿分析 |
+| page_view          | 用户浏览主要页面       | page_name（如主播墙页、匹配页面、聊天列表、任务页面、视频页面、充值页面）、previous_page、time_spent | 映射用户路径，识别热门页面       |
+| user_profile_click | 点击特定模特           | target_model_id、target_model_country、target_model_rate（主播费用） | 跟踪用户兴趣点                   |
+| chat_initiate      | 开始聊天               | chat_type（如文字、视频）、target_model_id、coin_cost（金币花费）、chat_time（聊天时长） | 关键付费相关事件                 |
+| task_complete      | 完成任务               | task_id、coins_earned、completion_time                       | 衡量金币获取路径                 |
+| coin_store_view    | 访问充值页面           | store_section（如购买、订阅）                                | 付费意愿前置事件                 |
+| coin_purchase      | 购买硬币               | purchase_amount（金币档位）、payment_method（支付方式）、currency（币种）、transaction_id（交易id） | 核心付费事件，用于付费漏斗       |
+| coin_use           | 使用硬币（如聊天付费） | use_case（如聊天、礼物）、amount_used（对应的数量）          | 跟踪消费行为                     |
+| user_out           | 用户退出               | end_time（退出时间）                                         | 获取结合用户进入首页进行分析     |
+
+### 3.3 留存与行为事件 
+
+| 事件名称                   | 触发条件              | 参数                                                        | 说明                   |
+| -------------------------- | --------------------- | ----------------------------------------------------------- | ---------------------- |
+| session_start              | 用户会话开始          | session_id（对话id）、start_time（开始时间）                | 用于计算会话时长和频率 |
+| session_end                | 用户会话结束          | session_id、end_time、actions_count（操作次数）             | 结合start事件分析留存  |
+| user_retention             | 每日/每周活跃用户检查 | retention_period（如D1、D7）、activity_type（如登录、聊天） | 自定义留存指标         |
+| push_notification_received | 推送通知发送          | notification_type、content                                  | 分析推送效果           |
+| push_notification_click    | 用户点击推送          | notification_type、redirect_page                            | 衡量推送转化           |
+
+1. ## 数据漏斗设计 
+
+基于埋点事件，构建以下关键漏斗：
+
+### 4.1 PWA安装漏斗 
+
+1. **漏斗步骤**：
+   1. 步骤1: `app_launch`（PWA访问）
+   2. 步骤2: `pwa_install_prompt_shown`（安装提示曝光）
+   3. 步骤3: `pwa_install_success`（安装成功）
+2. **分析指标**：安装提示曝光率、安装转化率、流失点分析（如用户忽略提示的原因）。
+
+### 4.2 付费意愿漏斗 
+
+1. **漏斗步骤**：
+   1. 步骤1: `user_login`（用户登录）
+   2. 步骤2: `coin_store_view`（访问硬币商店）
+   3. 步骤3: `coin_purchase`（购买硬币）
+   4. 步骤4: `coin_use`（使用硬币聊天）
+2. **分析指标**：商店访问率、购买转化率、付费用户占比。可细分用户群（如新用户vs老用户）。
+
+### 4.3 用户旅程漏斗 
+
+1. **典型路径**：
+   1. 入口: `app_launch`
+   2. 探索: `page_view`（首页） → `user_profile_click`
+   3. 行动: `chat_initiate`→ `task_complete`
+   4. 转化: `coin_purchase`或 `coin_use`
+2. **分析指标**：路径完成率、平均路径时长、流失页面识别。
+
+### 4.4 留存漏斗 
+
+1. **漏斗步骤**：
+   1. 基准: `user_bind`（绑定日）
+   2. 留存检查: `user_login`或 `chat_initiate`（在D1、D7、D30等周期）
+2. **分析指标**：次日留存率、7日留存率、30日留存率。可结合行为（如任务完成）分析留存驱动因素。
+
+1. ## 其他事项 
+
+- **埋点****技术**：使用自定义事件嵌入PWA代码。确保PWA支持Service Worker用于离线埋点。
+- **数据格式**：事件数据以JSON格式发送，包含时间戳、用户ID（匿名或注册）、设备信息等通用参数。
+- **数据安全**：遵守隐私政策（如GDPR），对敏感数据（如用户ID）进行哈希处理。
+- **测试与验证**：在测试开发环境模拟埋点。
+- **数据分析**：上线后跑量一周进行数据采集与分析v
+
+1. ## 后续迭代 
+
+- **A/B测试****埋点**：针对关键漏斗（如安装提示方式）进行A/B测试。
+- **报表自动化**：构建数据看板，监控漏斗指标每日变化。
