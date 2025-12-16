@@ -73,12 +73,17 @@ if (urlParams.get('autoClose') === 'true') {
 - **测试环境包名**: `com.stargate.ett`
 - **正式环境包名**: `work.eheet.eheet`
 
-#### 3. 商品筛选
-支持通过URL参数传递商品code列表,只展示指定商品,商品显示最好有几个模板(单商品、多商品、列表格式:Grid/List)
+#### 3. 商品筛选与展示模式
+支持通过URL参数传递商品code列表,根据商品数量自动切换展示模式
 
 - **传递商品code参数时**: 只展示这些指定商品(仅限该包名下的商品,其他包的商品不展示)
 - **不传递商品code参数时**: 展示该包名下的所有商品
-- **URL示例**: `?productCodes=CODE001,CODE002,CODE003`
+- **展示模式**:
+  - **单商品模式**: 当筛选后只有1个商品时,使用大卡片展示,顶部展示营销文案区域
+  - **多商品模式**: 当筛选后有多个商品时,使用Grid网格布局展示,不展示营销文案区域
+- **URL示例**:
+  - 多商品: `?productCodes=CODE001,CODE002,CODE003` (Grid布局,无营销文案)
+  - 单商品: `?productCodes=CODE001` (大卡片,有营销文案区域)
 
 #### 4. 商品默认选中
 支持商品列表的默认选中状态,提升用户体验
@@ -90,7 +95,23 @@ if (urlParams.get('autoClose') === 'true') {
   - 不指定选中: `?productCodes=CODE001,CODE002,CODE003` (默认选中CODE001)
   - 指定选中: `?productCodes=CODE001,CODE002,CODE003&selectedProductCode=CODE002` (选中CODE002)
 
-#### 5. 返回功能
+#### 5. 营销文案定制 (仅单商品模式)
+单商品模式下展示营销文案区域,通过预设模板快速切换不同营销场景
+
+- **参数**: `campaign` - 营销活动类型
+- **预设模板**:
+  - `vip`: VIP特权 - "VIP Privilege" / "Your Exclusive Access to 10% Off"
+  - `flashsale`: 限时抢购 - "Flash Sale 🎁" / "Exclusive Bonus Inside!"
+  - 默认(不传参数): 使用VIP模板
+- **显示规则**:
+  - 单商品模式: 展示营销文案区域
+  - 多商品模式: 不展示营销文案区域
+- **URL示例**:
+  - `?productCodes=CODE001` (默认VIP文案)
+  - `?productCodes=CODE001&campaign=flashsale` (限时抢购文案)
+  - `?productCodes=CODE001,CODE002&campaign=vip` (多商品,不展示文案)
+
+#### 6. 返回功能
 点击页面左上角返回按钮时,通过URL参数 `autoClose=true` 控制是否自动关闭当前标签页
 
 ### 预期收益
@@ -115,8 +136,13 @@ if (urlParams.get('autoClose') === 'true') {
 - ✅ 商品信息与coin-store一致
 - ✅ 支持`productCodes`参数筛选指定商品
 - ✅ 不传`productCodes`时展示所有商品
+- ✅ 单商品模式使用大卡片展示,多商品模式使用Grid布局
+- ✅ 营销文案区域仅在单商品模式下显示
 - ✅ 不传`selectedProductCode`时默认选中第一个商品
 - ✅ 传`selectedProductCode`时选中指定商品
+- ✅ 单商品模式下,支持`campaign`参数切换营销文案模板
+- ✅ 不传`campaign`参数时使用默认VIP模板
+- ✅ 多商品模式下不展示营销文案区域
 - ✅ 转化率提升至20%+
 
 ---
