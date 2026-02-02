@@ -2,7 +2,7 @@
 
 ## Step 1 (current)
 
-Filter `app_landing_launch` where `extra.utmSource` and `extra.invitationCode` have non-empty values, then dedupe by `extra.invitationCode`.
+Filter `app_landing_launch` where `extra.utmSource` contains `_to_` and `extra.invitationCode` is non-empty, then dedupe by `extra.invitationCode`.
 
 ```bash
 python3 scripts/funnel.py step1 \
@@ -13,15 +13,27 @@ python3 scripts/funnel.py step1 \
 
 The script prints the same summary JSON to stdout.
 
+Optional date filter (by `tm`):
+
+```bash
+python3 scripts/funnel.py step1 --date-start 2026-01-29 --date-end 2026-02-01
+```
+
 ## Step 2 (current)
 
-Filter `pwa_cta_click` where `extra.utmSource` and `extra.invitationCode` have non-empty values, then dedupe by `extra.invitationCode`.
+Filter `pwa_cta_click` where `extra.utmSource` contains `_to_` and `extra.invitationCode` is non-empty, then dedupe by `extra.invitationCode`.
 
 ```bash
 python3 scripts/funnel.py step2 \
   --input data/pwa_cta_click.json \
   --out-csv out/step2_pwa_cta_click_utmSource_dedup.csv \
   --out-summary out/step2_pwa_cta_click_utmSource_dedup.summary.json
+```
+
+Optional date filter (by `tm`):
+
+```bash
+python3 scripts/funnel.py step2 --date-start 2026-01-29 --date-end 2026-02-01
 ```
 
 ## Step 3 (current)
@@ -33,6 +45,12 @@ python3 scripts/funnel.py step3 \
   --input data/guide_page_view.json \
   --out-csv out/step3_guide_page_view_dedup_user_id.csv \
   --out-summary out/step3_guide_page_view_dedup_user_id.summary.json
+```
+
+Optional date filter (by `tm`):
+
+```bash
+python3 scripts/funnel.py step3 --date-start 2026-01-29 --date-end 2026-02-01
 ```
 
 ## Step 4 (current)
@@ -50,6 +68,12 @@ python3 scripts/funnel.py step4 \
   --out-summary out/step4_guide_bind_dedup_user_id.summary.json
 ```
 
+Optional date filter (by `tm`):
+
+```bash
+python3 scripts/funnel.py step4 --date-start 2026-01-29 --date-end 2026-02-01
+```
+
 ## Step 5 (current)
 
 Filter `guide_result` and count UV deduped by `user_id`.
@@ -59,6 +83,12 @@ python3 scripts/funnel.py step5 \
   --input data/guide_result.json \
   --out-csv out/step5_guide_result_dedup_user_id.csv \
   --out-summary out/step5_guide_result_dedup_user_id.summary.json
+```
+
+Optional date filter (by `tm`):
+
+```bash
+python3 scripts/funnel.py step5 --date-start 2026-01-29 --date-end 2026-02-01
 ```
 
 ## Extending for later funnel steps

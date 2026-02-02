@@ -1,0 +1,31 @@
+{
+  "input_path": "data/guide_result.json",
+  "output_csv": "out/2026-01-29_to_2026-02-01/step5.csv",
+  "raw_total_rows": 37,
+  "raw_event_counts": {
+    "guide_result": 37
+  },
+  "stage": "step5",
+  "filter": {
+    "event": "guide_result",
+    "date_start": "2026-01-29",
+    "date_end": "2026-02-01"
+  },
+  "raw_guide_result_rows": 37,
+  "date_filtered_out_rows": 0,
+  "guide_result_missing_in_extra": 0,
+  "guide_result_empty_or_blank": 0,
+  "kept_after_filter": 37,
+  "dedupe_key": "user_id",
+  "uv_unique_user_id": 31,
+  "dedupe_dropped_rows": 6,
+  "breakdown": {
+    "by_platform": {
+      "iOS": 31
+    },
+    "by_guide_result": {
+      "success": 28,
+      "fail": 3
+    }
+  }
+}

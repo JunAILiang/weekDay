@@ -1,0 +1,43 @@
+{
+  "input_path": "data/pwa_cta_click.json",
+  "output_csv": "out/2026-01-29_to_2026-02-01/step2.csv",
+  "raw_total_rows": 905,
+  "raw_event_counts": {
+    "pwa_cta_click": 905
+  },
+  "stage": "step2",
+  "filter": {
+    "event": "pwa_cta_click",
+    "extra.utmSource": "non-empty string",
+    "extra.invitationCode": "non-empty string",
+    "date_start": "2026-01-29",
+    "date_end": "2026-02-01"
+  },
+  "raw_pwa_cta_click_rows": 905,
+  "date_filtered_out_rows": 0,
+  "utmSource_missing_in_extra": 2,
+  "utmSource_empty_or_blank": 804,
+  "utmSource_invalid_format": 0,
+  "utmSource_invalid_values_top": {},
+  "invitationCode_missing_in_extra": 0,
+  "invitationCode_empty_or_blank": 0,
+  "kept_after_filter": 99,
+  "dedupe_key": "invitationCode",
+  "deduped_unique_invitationCode": 51,
+  "dedupe_dropped_rows": 48,
+  "breakdown": {
+    "by_utmSource": {
+      "lingfeng_to_eheet": 51
+    },
+    "by_platform": {
+      "Safari": 42,
+      "Google": 9
+    },
+    "by_device_model": {
+      "iOS": 51
+    },
+    "by_button_name": {
+      "start_now": 51
+    }
+  }
+}

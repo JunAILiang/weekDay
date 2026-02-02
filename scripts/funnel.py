@@ -20,8 +20,47 @@ def _parse_tm(value: Any) -> Optional[dt.datetime]:
         return None
 
 
+def _parse_date(value: Any) -> Optional[dt.date]:
+    if value is None:
+        return None
+    if isinstance(value, dt.date) and not isinstance(value, dt.datetime):
+        return value
+    if isinstance(value, dt.datetime):
+        return value.date()
+    if not isinstance(value, str):
+        return None
+    s = value.strip()
+    if not s:
+        return None
+    for fmt in ("%Y-%m-%d", "%Y/%m/%d"):
+        try:
+            return dt.datetime.strptime(s, fmt).date()
+        except ValueError:
+            pass
+    return None
+
+
+def _in_date_range(tm_value: Any, date_start: Optional[dt.date], date_end: Optional[dt.date]) -> bool:
+    if date_start is None and date_end is None:
+        return True
+    tm_dt = _parse_tm(tm_value)
+    if tm_dt is None:
+        return False
+    d = tm_dt.date()
+    if date_start is not None and d < date_start:
+        return False
+    if date_end is not None and d > date_end:
+        return False
+    return True
+
+
 def _is_nonempty_str(value: Any) -> bool:
     return isinstance(value, str) and value.strip() != ""
+
+
+def _is_valid_utm_source(value: Any) -> bool:
+    # Expected format like: xxx_to_yyy
+    return _is_nonempty_str(value) and "_to_" in value.strip()
 
 
 def _is_truthy_flag(value: Any) -> bool:
@@ -92,6 +131,8 @@ def step1_app_landing_launch(
     input_path: str,
     output_csv: str,
     output_summary_json: str,
+    date_start: Optional[dt.date],
+    date_end: Optional[dt.date],
 ) -> None:
     data = _load_json_any(input_path)
     records = list(_iter_records(data))
@@ -102,11 +143,17 @@ def step1_app_landing_launch(
     filtered_rows: List[Dict[str, Any]] = []
     utm_missing = 0
     utm_empty = 0
+    utm_invalid_format = 0
     invitation_code_missing = 0
     invitation_code_empty = 0
+    date_filtered_out = 0
+    utm_invalid_values = Counter()
 
     for r in records:
         if r.get("event") != "app_landing_launch":
+            continue
+        if not _in_date_range(r.get("tm"), date_start, date_end):
+            date_filtered_out += 1
             continue
 
         extra = _parse_extra(r.get("extra"))
@@ -116,6 +163,10 @@ def step1_app_landing_launch(
             continue
         if not _is_nonempty_str(utm):
             utm_empty += 1
+            continue
+        if not _is_valid_utm_source(utm):
+            utm_invalid_format += 1
+            utm_invalid_values[str(utm).strip()] += 1
             continue
 
         utm_str = str(utm).strip()
@@ -208,10 +259,15 @@ def step1_app_landing_launch(
             "event": "app_landing_launch",
             "extra.utmSource": "non-empty string",
             "extra.invitationCode": "non-empty string",
+            "date_start": date_start.isoformat() if date_start else None,
+            "date_end": date_end.isoformat() if date_end else None,
         },
         "raw_app_landing_launch_rows": event_counts.get("app_landing_launch", 0),
+        "date_filtered_out_rows": date_filtered_out,
         "utmSource_missing_in_extra": utm_missing,
         "utmSource_empty_or_blank": utm_empty,
+        "utmSource_invalid_format": utm_invalid_format,
+        "utmSource_invalid_values_top": dict(utm_invalid_values.most_common(20)),
         "invitationCode_missing_in_extra": invitation_code_missing,
         "invitationCode_empty_or_blank": invitation_code_empty,
         "kept_after_filter": len(filtered_rows),
@@ -235,6 +291,8 @@ def step2_pwa_cta_click(
     input_path: str,
     output_csv: str,
     output_summary_json: str,
+    date_start: Optional[dt.date],
+    date_end: Optional[dt.date],
 ) -> None:
     data = _load_json_any(input_path)
     records = list(_iter_records(data))
@@ -245,11 +303,17 @@ def step2_pwa_cta_click(
     filtered_rows: List[Dict[str, Any]] = []
     utm_missing = 0
     utm_empty = 0
+    utm_invalid_format = 0
     invitation_code_missing = 0
     invitation_code_empty = 0
+    date_filtered_out = 0
+    utm_invalid_values = Counter()
 
     for r in records:
         if r.get("event") != "pwa_cta_click":
+            continue
+        if not _in_date_range(r.get("tm"), date_start, date_end):
+            date_filtered_out += 1
             continue
 
         extra = _parse_extra(r.get("extra"))
@@ -259,6 +323,10 @@ def step2_pwa_cta_click(
             continue
         if not _is_nonempty_str(utm):
             utm_empty += 1
+            continue
+        if not _is_valid_utm_source(utm):
+            utm_invalid_format += 1
+            utm_invalid_values[str(utm).strip()] += 1
             continue
 
         utm_str = str(utm).strip()
@@ -354,10 +422,15 @@ def step2_pwa_cta_click(
             "event": "pwa_cta_click",
             "extra.utmSource": "non-empty string",
             "extra.invitationCode": "non-empty string",
+            "date_start": date_start.isoformat() if date_start else None,
+            "date_end": date_end.isoformat() if date_end else None,
         },
         "raw_pwa_cta_click_rows": event_counts.get("pwa_cta_click", 0),
+        "date_filtered_out_rows": date_filtered_out,
         "utmSource_missing_in_extra": utm_missing,
         "utmSource_empty_or_blank": utm_empty,
+        "utmSource_invalid_format": utm_invalid_format,
+        "utmSource_invalid_values_top": dict(utm_invalid_values.most_common(20)),
         "invitationCode_missing_in_extra": invitation_code_missing,
         "invitationCode_empty_or_blank": invitation_code_empty,
         "kept_after_filter": len(filtered_rows),
@@ -382,6 +455,8 @@ def step3_guide_page_view(
     input_path: str,
     output_csv: str,
     output_summary_json: str,
+    date_start: Optional[dt.date],
+    date_end: Optional[dt.date],
 ) -> None:
     data = _load_json_any(input_path)
     records = list(_iter_records(data))
@@ -393,9 +468,13 @@ def step3_guide_page_view(
     invitation_code_missing = 0
     invitation_code_empty = 0
     invitation_code_nonempty_rows = 0
+    date_filtered_out = 0
 
     for r in records:
         if r.get("event") != "guide_page_view":
+            continue
+        if not _in_date_range(r.get("tm"), date_start, date_end):
+            date_filtered_out += 1
             continue
 
         user_id = r.get("user_id")
@@ -478,8 +557,11 @@ def step3_guide_page_view(
         "filter": {
             "event": "guide_page_view",
             "extra.invitation_code": "non-empty string",
+            "date_start": date_start.isoformat() if date_start else None,
+            "date_end": date_end.isoformat() if date_end else None,
         },
         "raw_guide_page_view_rows": event_counts.get("guide_page_view", 0),
+        "date_filtered_out_rows": date_filtered_out,
         "invitation_code_missing_in_extra": invitation_code_missing,
         "invitation_code_empty_or_blank": invitation_code_empty,
         "invitation_code_nonempty_rows": invitation_code_nonempty_rows,
@@ -503,6 +585,8 @@ def step4_guide_bind(
     input_path: str,
     output_csv: str,
     output_summary_json: str,
+    date_start: Optional[dt.date],
+    date_end: Optional[dt.date],
 ) -> None:
     data = _load_json_any(input_path)
     records = list(_iter_records(data))
@@ -519,9 +603,13 @@ def step4_guide_bind(
     bind_result_empty = 0
     google_click_present = 0
     apple_click_present = 0
+    date_filtered_out = 0
 
     for r in records:
         if r.get("event") != "guide_bind":
+            continue
+        if not _in_date_range(r.get("tm"), date_start, date_end):
+            date_filtered_out += 1
             continue
 
         user_id = r.get("user_id")
@@ -637,8 +725,13 @@ def step4_guide_bind(
         "raw_total_rows": raw_total,
         "raw_event_counts": dict(event_counts),
         "stage": "step4",
-        "filter": {"event": "guide_bind"},
+        "filter": {
+            "event": "guide_bind",
+            "date_start": date_start.isoformat() if date_start else None,
+            "date_end": date_end.isoformat() if date_end else None,
+        },
         "raw_guide_bind_rows": event_counts.get("guide_bind", 0),
+        "date_filtered_out_rows": date_filtered_out,
         "dedupe": {
             "click_google_bind": {"dedupe_key": "user_id", "unique_user_id": len(google_click_users)},
             "click_apple_bind": {"dedupe_key": "user_id", "unique_user_id": len(apple_click_users)},
@@ -663,6 +756,8 @@ def step5_guide_result(
     input_path: str,
     output_csv: str,
     output_summary_json: str,
+    date_start: Optional[dt.date],
+    date_end: Optional[dt.date],
 ) -> None:
     data = _load_json_any(input_path)
     records = list(_iter_records(data))
@@ -673,9 +768,13 @@ def step5_guide_result(
     filtered_rows: List[Dict[str, Any]] = []
     guide_result_missing = 0
     guide_result_empty = 0
+    date_filtered_out = 0
 
     for r in records:
         if r.get("event") != "guide_result":
+            continue
+        if not _in_date_range(r.get("tm"), date_start, date_end):
+            date_filtered_out += 1
             continue
 
         user_id = r.get("user_id")
@@ -752,8 +851,13 @@ def step5_guide_result(
         "raw_total_rows": raw_total,
         "raw_event_counts": dict(event_counts),
         "stage": "step5",
-        "filter": {"event": "guide_result"},
+        "filter": {
+            "event": "guide_result",
+            "date_start": date_start.isoformat() if date_start else None,
+            "date_end": date_end.isoformat() if date_end else None,
+        },
         "raw_guide_result_rows": event_counts.get("guide_result", 0),
+        "date_filtered_out_rows": date_filtered_out,
         "guide_result_missing_in_extra": guide_result_missing,
         "guide_result_empty_or_blank": guide_result_empty,
         "kept_after_filter": len(filtered_rows),
@@ -795,6 +899,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         default="out/step1_app_landing_launch_utmSource_dedup.summary.json",
         help="Output summary JSON path (default: out/step1_app_landing_launch_utmSource_dedup.summary.json)",
     )
+    step1.add_argument("--date-start", default=None, help="Filter by tm date >= YYYY-MM-DD (optional)")
+    step1.add_argument("--date-end", default=None, help="Filter by tm date <= YYYY-MM-DD (optional)")
 
     step2 = sub.add_parser(
         "step2",
@@ -815,6 +921,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         default="out/step2_pwa_cta_click_utmSource_dedup.summary.json",
         help="Output summary JSON path (default: out/step2_pwa_cta_click_utmSource_dedup.summary.json)",
     )
+    step2.add_argument("--date-start", default=None, help="Filter by tm date >= YYYY-MM-DD (optional)")
+    step2.add_argument("--date-end", default=None, help="Filter by tm date <= YYYY-MM-DD (optional)")
 
     step3 = sub.add_parser(
         "step3",
@@ -835,6 +943,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         default="out/step3_guide_page_view_dedup_user_id.summary.json",
         help="Output summary JSON path (default: out/step3_guide_page_view_dedup_user_id.summary.json)",
     )
+    step3.add_argument("--date-start", default=None, help="Filter by tm date >= YYYY-MM-DD (optional)")
+    step3.add_argument("--date-end", default=None, help="Filter by tm date <= YYYY-MM-DD (optional)")
 
     step4 = sub.add_parser(
         "step4",
@@ -855,6 +965,8 @@ def main(argv: Optional[List[str]] = None) -> None:
         default="out/step4_guide_bind_dedup_user_id.summary.json",
         help="Output summary JSON path (default: out/step4_guide_bind_dedup_user_id.summary.json)",
     )
+    step4.add_argument("--date-start", default=None, help="Filter by tm date >= YYYY-MM-DD (optional)")
+    step4.add_argument("--date-end", default=None, help="Filter by tm date <= YYYY-MM-DD (optional)")
 
     step5 = sub.add_parser(
         "step5",
@@ -875,23 +987,28 @@ def main(argv: Optional[List[str]] = None) -> None:
         default="out/step5_guide_result_dedup_user_id.summary.json",
         help="Output summary JSON path (default: out/step5_guide_result_dedup_user_id.summary.json)",
     )
+    step5.add_argument("--date-start", default=None, help="Filter by tm date >= YYYY-MM-DD (optional)")
+    step5.add_argument("--date-end", default=None, help="Filter by tm date <= YYYY-MM-DD (optional)")
 
     args = parser.parse_args(argv)
 
+    date_start = _parse_date(getattr(args, "date_start", None))
+    date_end = _parse_date(getattr(args, "date_end", None))
+
     if args.cmd == "step1":
-        step1_app_landing_launch(args.input, args.out_csv, args.out_summary)
+        step1_app_landing_launch(args.input, args.out_csv, args.out_summary, date_start, date_end)
         return
     if args.cmd == "step2":
-        step2_pwa_cta_click(args.input, args.out_csv, args.out_summary)
+        step2_pwa_cta_click(args.input, args.out_csv, args.out_summary, date_start, date_end)
         return
     if args.cmd == "step3":
-        step3_guide_page_view(args.input, args.out_csv, args.out_summary)
+        step3_guide_page_view(args.input, args.out_csv, args.out_summary, date_start, date_end)
         return
     if args.cmd == "step4":
-        step4_guide_bind(args.input, args.out_csv, args.out_summary)
+        step4_guide_bind(args.input, args.out_csv, args.out_summary, date_start, date_end)
         return
     if args.cmd == "step5":
-        step5_guide_result(args.input, args.out_csv, args.out_summary)
+        step5_guide_result(args.input, args.out_csv, args.out_summary, date_start, date_end)
         return
 
     raise SystemExit(f"Unknown command: {args.cmd}")

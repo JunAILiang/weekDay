@@ -1,0 +1,42 @@
+{
+  "input_path": "data/app_landing_launch.json",
+  "output_csv": "out/2026-01-29_to_2026-02-01/step1.csv",
+  "raw_total_rows": 6512,
+  "raw_event_counts": {
+    "app_landing_launch": 6512
+  },
+  "stage": "step1",
+  "filter": {
+    "event": "app_landing_launch",
+    "extra.utmSource": "non-empty string",
+    "extra.invitationCode": "non-empty string",
+    "date_start": "2026-01-29",
+    "date_end": "2026-02-01"
+  },
+  "raw_app_landing_launch_rows": 6512,
+  "date_filtered_out_rows": 4,
+  "utmSource_missing_in_extra": 83,
+  "utmSource_empty_or_blank": 6265,
+  "utmSource_invalid_format": 2,
+  "utmSource_invalid_values_top": {
+    "pcEkhyQz_il_vCBYb": 2
+  },
+  "invitationCode_missing_in_extra": 0,
+  "invitationCode_empty_or_blank": 0,
+  "kept_after_filter": 158,
+  "dedupe_key": "invitationCode",
+  "deduped_unique_invitationCode": 62,
+  "dedupe_dropped_rows": 96,
+  "breakdown": {
+    "by_utmSource": {
+      "lingfeng_to_eheet": 62
+    },
+    "by_platform": {
+      "Safari": 53,
+      "Google": 9
+    },
+    "by_device_model": {
+      "iOS": 62
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "input_path": "data/guide_page_view.json",
+  "output_csv": "out/2026-01-29_to_2026-02-01/step3.csv",
+  "raw_total_rows": 329,
+  "raw_event_counts": {
+    "guide_page_view": 329
+  },
+  "stage": "step3",
+  "filter": {
+    "event": "guide_page_view",
+    "extra.invitation_code": "non-empty string",
+    "date_start": "2026-01-29",
+    "date_end": "2026-02-01"
+  },
+  "raw_guide_page_view_rows": 329,
+  "date_filtered_out_rows": 0,
+  "invitation_code_missing_in_extra": 172,
+  "invitation_code_empty_or_blank": 0,
+  "invitation_code_nonempty_rows": 153,
+  "kept_after_filter": 153,
+  "dedupe_key": "user_id",
+  "deduped_unique_user_id": 53,
+  "dedupe_dropped_rows": 100,
+  "breakdown": {
+    "by_platform": {
+      "iOS": 53
+    },
+    "invitation_code_nonempty_count": 53
+  }
+}
