@@ -4,121 +4,112 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is a **weekly report and performance documentation repository** for a PWA (Progressive Web App) project team. All content is written in Chinese (中文).
+这是一个**工作档案仓库**，用于记录PWA项目（2025年4月-2026年2月）的完整工作历程。所有内容使用中文（简体中文）编写。
 
 ### Purpose
-- Track weekly work progress and achievements (周报)
-- Document performance reviews and self-evaluations (绩效自评)
-- Store incident postmortems and retrospectives (事故复盘)
-- Maintain data analysis charts and supporting materials
+- 保存项目复盘和个人成长总结
+- 归档季度绩效自评文档
+- 存储技术文档和需求文档
+- 记录团队管理和流程规范
+- 归档40周的完整周报（已完成项目）
 
 ## Repository Structure
 
 ```
 weekDay/
-├── 2025/                    # Weekly reports for 2025
-│   ├── 第28周周报.md        # Week 28 report
-│   ├── 第33周周报.md        # Week 33 report
-│   ├── 第39周周报.md        # Week 39 report (latest)
-│   └── 第XX周9月27日发布事故复盘.md  # Incident postmortems
-├── zp/                      # Performance reviews
-│   └── 2025年Q3绩效自评（7-9月）.md
-├── syq/                     # Additional resources
-├── images/                  # Supporting charts and images
-│   ├── 34/                  # Week 34 images
-│   ├── 37/                  # Week 37 images
-│   └── 39/                  # Week 39 images
-└── .claude/                 # Claude Code settings
-    └── settings.local.json
+├── 复盘总结/                 # 项目复盘和成长总结
+│   ├── PWA项目成长复盘.md
+│   ├── PWA项目个人成长总结.md
+│   └── 2025年11月工作总结.md
+├── 绩效评估/                 # 季度绩效自评
+│   ├── 2025年Q3绩效自评（7-9月）.md
+│   ├── 2025年Q4绩效自评（10-12月）.md
+│   └── lending_report.md
+├── 技术文档/                 # 技术方案和需求文档
+│   ├── SEO优化/
+│   │   ├── SEO_REVIEW_GUIDE.md
+│   │   └── SEO_TECH_PLAN.md
+│   └── 需求文档/
+│       ├── 广告转化漏斗分析报表需求.md
+│       ├── 机器人Call呼叫漏斗报表需求.md
+│       └── ...
+├── 计划流程/                 # 团队管理和流程规范
+│   ├── ONBOARDING_SOP_v2.md
+│   ├── iOS马甲包制作流程图.md
+│   └── 年前过渡期行动计划（2月9-14日）.md
+├── 已归档/                   # 历史文档归档
+│   ├── PWA项目周报/
+│   │   ├── 2025/            # 第17-51周周报（39份）
+│   │   └── 2026/            # 第1-5周周报（5份）
+│   └── 转岗相关/            # 转岗谈话文档
+├── CLAUDE.md                 # 本文件
+└── README.md                 # 项目说明
 ```
-
-## Weekly Report Structure
-
-Weekly reports (周报) follow a consistent structure:
-
-1. **核心成果** (Core Achievements)
-   - 团队动态 (Team dynamics)
-   - 本周上线项目 (Launched projects)
-   - 规划/开发中的项目 (Planned/in-development projects)
-
-2. **核心数据** (Core Metrics)
-   - 漏斗分析 (Funnel analysis)
-   - 转化率数据 (Conversion rates)
-   - 用户行为数据 (User behavior data)
-   - Supporting charts linked from `images/XX/` directory
-
-3. **反思与改进** (Reflection and Improvement)
-   - Problem identification
-   - Root cause analysis
-   - Improvement actions
-
-4. **关注要点与应对策略** (Key Focus Areas and Strategies)
-   - 🔴 关键风险点 (Critical risks)
-   - 🟢 积极信号 (Positive signals)
-   - 📋 下周重点工作 (Next week priorities)
-
-5. **相关链接** (Related Links)
-   - Links to previous weeks
-   - External documentation (Feishu/Lark docs)
 
 ## Key Context
 
-### Project Background
-This repository documents work on a **PWA dating/social application** with:
-- Server-Side Rendering (SSR) with Node.js
-- Task system for user engagement
-- FB/Instagram advertising integration
-- Multi-browser support (Safari optimization focus)
-- Third-party OAuth integration (Google, etc.)
+### 项目背景
+这个仓库记录了一个**PWA社交应用项目**的完整工作历程（40周）：
+- **技术栈**：PWA、Service Worker、Node.js SSR、第三方OAuth
+- **业务模式**：FB/Instagram广告投放 → 用户注册转化 → 付费会员
+- **核心成果**：
+  - 全链路转化率：22% → 57%（+159%）
+  - 首启P90耗时：8.65秒 → 4.5秒（-48%）
+  - 促销付费率：0.81% → 2.66%（+228%）
+  - Bot污染：3000+/天 → <100/天（-97%）
 
-### Common Topics
-- **首启优化** - App startup optimization
-- **任务系统** - Task/mission system for user retention
-- **呼叫接听漏斗** - Call answering funnel analysis
-- **账号绑定** - Account binding/OAuth flow
-- **投放拒审** - Ad rejection issues (Facebook/Instagram)
-- **ROI/成交率/付费率** - Business metrics
-- **Safari引导** - Safari browser guidance for iOS users
-
-### Naming Conventions
-- Weekly reports: `第XX周周报.md` (Week XX Report)
-- Performance reviews: `YYYY年QX绩效自评（M-M月）.md`
-- Incident postmortems: `第XX周[日期]发布事故复盘.md`
-- Image directories: `images/XX/` where XX is the week number
+### 常见术语
+- **首启优化** - App启动性能优化
+- **任务系统** - 用户留存的任务/签到系统
+- **呼叫接听漏斗** - 视频通话转化漏斗分析
+- **账号绑定** - OAuth第三方登录流程
+- **投放拒审** - Facebook/Instagram广告审核被拒
+- **ROI/成交率/付费率** - 核心业务指标
+- **班车制度** - 固定发布节奏（周一、周四）
 
 ## Working with This Repository
 
-### Adding a New Weekly Report
-1. Create file in `2025/` directory following naming pattern: `第XX周周报.md`
-2. Follow the standard 5-section structure (see above)
-3. Create corresponding image directory: `images/XX/`
-4. Link to previous week's report in the "相关链接" section
+### 文档组织原则
+1. **按主题分类**：不是按时间线，而是按文档类型（复盘、绩效、技术、计划）
+2. **活跃文档在顶层**：当前有用的文档放在顶层目录
+3. **历史文档归档**：已完成项目的周报放在"已归档/"目录
+4. **中文命名**：所有目录和文件使用中文命名，便于查找
 
-### Adding Charts/Images
-1. Place images in `images/XX/` where XX is the week number
-2. Reference using relative path: `![Description](../images/XX/filename.png)`
-3. Use descriptive filenames (Chinese names are acceptable)
+### 添加新文档
+- **复盘总结**：放在 `复盘总结/` 目录
+- **绩效评估**：放在 `绩效评估/` 目录，命名格式：`YYYY年QX绩效自评（M-M月）.md`
+- **技术文档**：放在 `技术文档/` 对应子目录
+- **计划流程**：放在 `计划流程/` 目录
+
+### 周报结构（已归档）
+历史周报遵循5部分结构：
+1. **核心成果**：团队动态、上线项目、规划项目
+2. **核心数据**：漏斗分析、转化率、用户行为数据
+3. **反思与改进**：问题识别、根因分析、改进措施
+4. **关注要点与应对策略**：风险点、积极信号、下周重点
+5. **相关链接**：上周周报、飞书文档链接
 
 ### Git Operations
-- This is an active repository tracking week-by-week progress
-- Commits should be descriptive about which week and what changes
-- Current branch: `main`
-- No CI/CD or automated testing
+- 这是一个文档归档仓库，不是代码仓库
+- 提交信息应描述文档变更内容
+- 当前分支：`main`
+- 无CI/CD或自动化测试
 
 ## Content Guidelines
 
-### Language
-- All content is in **Chinese (中文)**
-- Technical terms may use English (PWA, ROI, SSR, etc.)
-- Feishu/Lark documentation links are common
+### 语言
+- 所有内容使用**简体中文**
+- 技术术语可使用英文（PWA, ROI, SSR等）
+- 常见外部工具：飞书（Feishu/Lark）文档链接
 
-### Data Privacy
-- This repository contains internal business metrics and data
-- Ad performance data (CPC, ROI, conversion rates)
-- User behavior analytics
-- Team member names may be present
+### 数据隐私
+- 包含内部业务指标和数据
+- 广告投放数据（CPC, ROI, 转化率）
+- 用户行为分析数据
+- 可能包含团队成员姓名
 
-### Common External Tools Referenced
-- **飞书** (Feishu/Lark) - Primary documentation and collaboration platform
-- Links to Feishu wikis, spreadsheets, and mind maps are common
-- FB/Instagram Ad Manager for advertising data
+### 文档风格
+- 使用数据支撑结论
+- 包含具体指标和对比数据
+- 强调根因分析和改进措施
+- 链接到飞书文档获取详细信息
