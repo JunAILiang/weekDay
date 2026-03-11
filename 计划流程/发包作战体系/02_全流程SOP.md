@@ -202,8 +202,13 @@ A1 → A2 → H5B，不等 A1 过审再开始 A2，并行推进
 
 > 注意：以下步骤虚拟机**不要连接网络**，打包成功后再联网
 
-1. 将 mini 机器上 `/opt/work/app/<应用名>` 和 `AppListing` 目录拖入虚拟机
-2. 使用 AppListing 解压应用
+1. 将发包机上以下两个目录拖入虚拟机：
+   - `aurora/opt/work/AppListing`
+   - `aurora/aurora/work/appOfflinePackage/<应用名>`
+2. 执行解压脚本：
+   ```
+   sh install_offline_app.sh <应用目录>
+   ```
 3. 修改包名，选择对应证书
 4. 执行打包命令，在原有参数基础上加 `--no-pub`
 5. 打包成功后，恢复虚拟机网络连接
