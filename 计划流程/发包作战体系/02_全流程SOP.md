@@ -45,7 +45,16 @@
 | 隔离原则 | 一个 IP 只绑定一个账号，严禁复用 |
 | 污染判断 | 曾出现卡审/封号记录的 IP 视为污染，立即停用 |
 
-### IP 购买步骤（iproyal）
+### IP 供应商列表
+
+| 供应商 | 控制台地址 | 状态 |
+|--------|----------|------|
+| iproyal | https://dashboard.iproyal.com/ | 使用中 |
+| decodo | https://dashboard.decodo.cn/ | 使用中 |
+
+> 后续新增供应商在此表追加，操作步骤在下方对应小节补充
+
+### IP 购买步骤 — iproyal
 
 1. 登录 [iproyal 控制台](https://dashboard.iproyal.com/)
 2. 选择「静态住宅代理」
@@ -56,6 +65,17 @@
    - **必须勾选「质量」选项**
 4. 提交订单，获得 socks5 账号密码
 5. 在苹果账号管理表中填写以下信息：
+   - 网络（socks5 账号密码）
+   - 账号内容（Apple ID 账号密码）
+   - IP 过期时间
+   - IP 是否自动续费
+
+### IP 购买步骤 — decodo
+
+1. 登录 [decodo 控制台](https://dashboard.decodo.cn/)
+2. 选择「静态住宅代理」
+3. 购买并获得 socks5 账号密码
+4. 在苹果账号管理表中填写以下信息：
    - 网络（socks5 账号密码）
    - 账号内容（Apple ID 账号密码）
    - IP 过期时间
