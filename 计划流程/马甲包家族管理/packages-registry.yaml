@@ -1,0 +1,161 @@
+# 马甲包家族注册表
+#
+# 使用说明：
+# 1. 每次新增包（衍生或复制）后，更新此文件
+# 2. 将 packages-tree.md 中的表格内容同步到飞书多维表格
+#
+# 命名规范：
+#   - 母包：aurora-root
+#   - 衍生包：aurora-variant-{n}
+#   - 复制包：{父包ID}-clone-{n}
+#
+# 策略说明：
+#   - 衍生 (derivative): 基于母包或衍生包，改 variant/概念，继承全部代码
+#   - 复制 (clone):     基于衍生包或复制包，重构后改名，configs 全面覆盖
+
+packages:
+
+  # ============================================================
+  # 根节点：Flutter 母包
+  # ============================================================
+  - id: aurora-root
+    name: "Flutter H5 SDK v2 母包"
+    alias: "Aurora Flutter"
+    platform: flutter
+    created: 2026-02-01
+    updated: 2026-03-05
+    status: active
+    branch: main
+    repo: git@gitlab.internal/aurora-flutter.git
+    git_ref: v3.2.1
+    description: "Flutter H5 SDK v2 重构版本，所有衍生包的代码来源"
+    children:
+      - aurora-variant-1
+      - aurora-variant-2
+      - aurora-variant-3
+
+
+  # ============================================================
+  # 衍生包（直接基于母包衍生）
+  # ============================================================
+
+  - id: aurora-variant-1
+    name: "Aurora US V1"
+    parent: aurora-root
+    strategy: derivative
+    created: 2026-03-01
+    updated: 2026-03-05
+    status: active
+    branch: feature/aurora-variant-1
+    git_ref: v3.2.1
+    description: "美国市场"
+    children:
+      - aurora-variant-1-clone-1
+    changes_from_parent:
+      - field: geo_target
+        to: "US"
+      - field: bundle_id
+        to: "com.milife.aurora.us"
+    configs:
+      app_name: "Aurora US"
+      bundle_id: "com.milife.aurora.us"
+      facebook_app_id: "000000000000001"
+      geo_target: "US"
+      store_region: "US"
+      store_country_code: "us"
+
+  - id: aurora-variant-2
+    name: "Aurora India V1"
+    alias: "Milife 印度包"
+    parent: aurora-root
+    strategy: derivative
+    created: 2026-03-10
+    updated: 2026-03-15
+    status: in_dev
+    branch: feature/aurora-variant-2
+    git_ref: v3.2.1
+    description: "印度市场，按排期开发中"
+    children: []
+    changes_from_parent:
+      - field: geo_target
+        to: "IN"
+      - field: bundle_id
+        to: "com.milife.aurora.in"
+    configs:
+      app_name: "Aurora India"
+      bundle_id: "com.milife.aurora.in"
+      facebook_app_id: "000000000000002"
+      geo_target: "IN"
+      store_region: "IN"
+      store_country_code: "in"
+
+  - id: aurora-variant-3
+    name: "Aurora Philippines V1"
+    parent: aurora-root
+    strategy: derivative
+    created: 2026-03-12
+    updated: 2026-03-12
+    status: pending_review
+    branch: feature/aurora-variant-3
+    git_ref: v3.2.1
+    description: "菲律宾市场"
+    children: []
+    changes_from_parent:
+      - field: geo_target
+        to: "PH"
+      - field: bundle_id
+        to: "com.milife.aurora.ph"
+    configs:
+      app_name: "Aurora PH"
+      bundle_id: "com.milife.aurora.ph"
+      facebook_app_id: "000000000000003"
+      geo_target: "PH"
+      store_country_code: "ph"
+
+
+  # ============================================================
+  # 复制包（从衍生包复制，改名重构）
+  # ============================================================
+
+  - id: aurora-variant-1-clone-1
+    name: "Hotchat US V1"
+    parent: aurora-variant-1
+    strategy: clone
+    created: 2026-03-10
+    updated: 2026-03-15
+    status: pending_review
+    branch: feature/aurora-variant-1-clone-1
+    git_ref: v3.2.1
+    description: "Aurora US V1 的复制包，改名 Hotchat US"
+    children: []
+    changes_from_parent:
+      - field: app_name
+        from: "Aurora US"
+        to: "Hotchat US"
+      - field: bundle_id
+        from: "com.milife.aurora.us"
+        to: "com.milife.hotchat.us"
+      - field: facebook_app_id
+        to: "000000000000101"
+    configs:
+      app_name: "Hotchat US"
+      bundle_id: "com.milife.hotchat.us"
+      facebook_app_id: "000000000000101"
+      geo_target: "US"
+      store_region: "US"
+      store_country_code: "us"
+      app_scheme: "milifehotchat"
+      app_scheme_https: "https://milifehotchat.com"
+      support_email: "support@milifehotchat.com"
+
+
+# ============================================================
+# 元数据
+# ============================================================
+_meta:
+  version: "2.0"
+  last_sync: 2026-04-09
+  total_packages: 5
+  active_packages: 2
+  pending_review: 2
+  in_dev: 1

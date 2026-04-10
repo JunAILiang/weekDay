@@ -1,0 +1,6 @@
+包ID,包名称,策略,父包,状态
+aurora-root,Flutter H5 SDK v2 母包,根节点,-,active
+aurora-variant-1,Aurora US V1,衍生,aurora-root,active
+aurora-variant-1-clone-1,Hotchat US V1,复制,aurora-variant-1,pending_review
+aurora-variant-2,Aurora India V1,衍生,aurora-root,in_dev
+aurora-variant-3,Aurora Philippines V1,衍生,aurora-root,pending_review
